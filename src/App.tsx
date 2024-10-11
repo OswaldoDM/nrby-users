@@ -56,7 +56,7 @@ function App() {
       return byCountry && byAge && byGenre;
     });
 
-    const compareProperties: Record<string, (user: User) => any> = {
+    const compareProperties:Record<string, (user: User) => any> = {
       [SortBy.COUNTRY]: (user) => user.location.country,
       [SortBy.NAME]: (user) => user.name.first,
       [SortBy.LAST]: (user) => user.name.last,
@@ -72,18 +72,18 @@ function App() {
     return filtering;
   }, [users, filters, sorting]);
 
-  const onFilterChange = (name: keyof Filters, value: number | string) => {
+  const onFilterChange = (name:keyof Filters, value:number | string) => {
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
 
-  const onSortChange = (option?: string) => {
+  const onSortChange = (option?:string) => {
     if (option === "Name") setSorting(SortBy.NAME);
     if (option === "Last Name") setSorting(SortBy.LAST);
     if (option === "Country") setSorting(SortBy.COUNTRY);
     if (!option) setSorting(SortBy.NONE);
   };
 
-  const handlePages = (op: number) => setPage(op);
+  const handlePages = (op:number) => setPage(op);
 
   return (
     <>
