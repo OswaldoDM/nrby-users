@@ -1,7 +1,7 @@
 {
-  "name": "vite-type-tail",
-  "homepage": "https://oswaldodm.github.io/prueba_menor_igual/",
+  "name": "vite-type-tail",  
   "private": true,
+  "homepage": "https://github.com/OswaldoDM/nrby-users",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

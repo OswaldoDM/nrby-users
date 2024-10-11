@@ -1,16 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import { Filters, User } from "./types.d";
 import { fetchData } from "./api/fetchData";
+import { SortBy } from "./utils/enums";
 import AllFilters from "./components/AllFilters";
 import UserList from "./components/UserList";
 import Pagination from "./components/Pagination";
+import nrby from "./assets/nrby_logo.png";
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [filters, setFilters] = useState<Filters>({results: 20,country: null,age: null,genre: null,});
   const [page, setPage] = useState(1);
+  const [sorting, setSorting] = useState<SortBy>(SortBy.NONE);
+  const [filters, setFilters] = useState<Filters>({
+    results: 20,
+    country: null,
+    age: null,
+    genre: null,
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -26,54 +33,81 @@ function App() {
       });
   }, [filters.results, page]);
 
-  const filteredUsers = useMemo(() => {
-    let filtered = users;
+  const filteredAndSortedUsers = useMemo(() => {
+    const filtering = users.filter((user) => {
+      const byCountry = filters.country
+        ? user.location.country
+            .toLowerCase()
+            .includes(filters.country.toLowerCase())
+        : true;
 
-    if (filters.country) {
-      filtered = filtered.filter((user) =>
-        user.location.country
-          .toLowerCase()
-          .includes(filters.country!.toLowerCase())
-      );
+      const byAge = filters.age
+        ? user.dob.age
+            .toString()
+            .toLowerCase()
+            .includes(filters.age.toLowerCase())
+        : true;
+
+      const byGenre = filters.genre
+        ? (filters.genre === "Female" && user.gender === "female") ||
+          (filters.genre === "Male" && user.gender === "male")
+        : true;
+
+      return byCountry && byAge && byGenre;
+    });
+
+    const compareProperties: Record<string, (user: User) => any> = {
+      [SortBy.COUNTRY]: (user) => user.location.country,
+      [SortBy.NAME]: (user) => user.name.first,
+      [SortBy.LAST]: (user) => user.name.last,
+    };
+
+    if (sorting !== SortBy.NONE) {
+      return [...filtering].sort((a, b) => {
+        const extractProperty = compareProperties[sorting];
+        return extractProperty(a).localeCompare(extractProperty(b));
+      });
     }
 
-    if (filters.age) {
-      filtered = filtered.filter((user) =>
-        user.dob.age
-          .toString()
-          .toLowerCase()
-          .includes(filters.age!.toLowerCase())
-      );
-    }
+    return filtering;
+  }, [users, filters, sorting]);
 
-    if (filters.genre) {
-      filtered =
-        filters.genre === "Femenino"
-          ? filtered.filter((user) => user.gender === "female")
-          : filters.genre === "Masculino"
-          ? filtered.filter((user) => user.gender === "male")
-          : filtered;
-    }
-
-    return filtered;
-  }, [users, filters]);
-
-  const handleFilterChange = (name: keyof Filters, value: any) => {
+  const onFilterChange = (name: keyof Filters, value: number | string) => {
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
+  const onSortChange = (option?: string) => {
+    if (option === "Name") setSorting(SortBy.NAME);
+    if (option === "Last Name") setSorting(SortBy.LAST);
+    if (option === "Country") setSorting(SortBy.COUNTRY);
+    if (!option) setSorting(SortBy.NONE);
   };
 
   const handlePages = (op: number) => setPage(op);
 
   return (
     <>
-      <header className='bg-[#EADDFF] py-[10px] flex justify-center items-center'>
-        <h2 className='font-nunito text-[45px] text-[#21005D]'>Personas</h2>
+      <header className='bg-[#363636] flex justify-center'>
+        <img src={nrby}></img>
       </header>
       <div className='container mx-auto mt-8 w-full font-lato font-sm'>
-        <AllFilters users={users}handleFilterChange={handleFilterChange} loading={loading}/>
+        <AllFilters
+          users={users}
+          loading={loading}
+          onFilterChange={onFilterChange}
+          onSortChange={onSortChange}
+        />
+
         {error && <p className='text-center mt-5'>Data error</p>}
-        <UserList filteredUsers={filteredUsers} />
-        <Pagination users={users} page={page} loading={loading} handlePages={handlePages}/>
+
+        <UserList filteredAndSortedUsers={filteredAndSortedUsers} />
+
+        <Pagination
+          users={users}
+          page={page}
+          loading={loading}
+          handlePages={handlePages}
+        />
       </div>
     </>
   );

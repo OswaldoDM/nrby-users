@@ -1,13 +1,12 @@
-import { User } from "../types";
 
-interface UserListProps {
-  filteredUsers: User[];
+interface Props {
+  filteredAndSortedUsers: User[];
 }
 
-const UserList = ({ filteredUsers }:UserListProps) => {
+const UserList = ({ filteredAndSortedUsers }:Props) => {
   return (
-    <div className='flex flex-col md:flex-row flex-wrap'>
-      {filteredUsers.map((user) => (
+    <div className='flex flex-col sm:flex-row flex-wrap'>
+      {filteredAndSortedUsers.map((user) => (
         <div
           key={user.email}
           className='flex w-full pt-10 px-12 md:px-10 gap-2 md:w-1/2 lg:md:w-1/3 lg:px-0'
@@ -18,7 +17,7 @@ const UserList = ({ filteredUsers }:UserListProps) => {
             alt={`${user.name.first} ${user.name.last}`}
           />
           <div className='ml-2 flex flex-col gap-[5px] text-[#1D1B20] text-sm'>
-            <h3 className='font-nunitos text-2xl text-[#65558F]'>
+            <h3 className='font-nunitos text-2xl text-[#363636]'>
               {user.name.first} {user.name.last}
             </h3>
             <p>{user.location.country}</p>
