@@ -9,7 +9,7 @@ const UserList = ({ filteredAndSortedUsers }:Props) => {
       {filteredAndSortedUsers.map((user) => (
         <div
           key={user.email}
-          className='flex w-full pt-10 px-12 md:px-10 gap-2 md:w-1/2 lg:md:w-1/3 lg:px-0'
+          className='flex w-full pt-10 px-12 md:px-10 gap-2 md:w-1/2 lg:md:w-1/3 xl:px-0'
         >
           <img
             className='rounded-[10px] md:w-[128px] md:h-[128px] object-cover'
@@ -21,8 +21,8 @@ const UserList = ({ filteredAndSortedUsers }:Props) => {
               {user.name.first} {user.name.last}
             </h3>
             <p>{user.location.country}</p>
-            <p>{user.gender === "male" ? "Masculino" : "Femenino"}</p>
-            <p>{user.dob.age} años</p>
+            <p>{user.gender === "male" ? "Male" : "Female"}</p>
+            <p>{user.dob.age} years</p>
           </div>
         </div>
       ))}

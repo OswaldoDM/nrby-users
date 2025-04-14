@@ -3,18 +3,17 @@ import arrowL from "../assets/arrow_left.svg";
 
 interface Props {
   users: User[];
-  page: number;
-  loading: boolean;
+  page: number;  
   handlePages: (page:number) => void;
 }
 
-const Pagination = ({ users, page, loading, handlePages }:Props) => {
+const Pagination = ({ users, page, handlePages }:Props) => {
   return (
     <>
       {users.length > 0 && (
-        <div className='flex justify-center gap-2 my-8'>
+        <div className='flex justify-center gap-2 my-8 lg:ml-2'>
           <button
-            className='group hover:bg-[#16dc91] rounded-2xl transition duration-200 w-[114px] h-[44px]'
+            className='group hover:bg-[#16dc91] rounded-2xl transition duration-200 w-[100px] h-[44px]'
             onClick={() => handlePages(page - 1)}
             disabled={page === 1}
           >
@@ -26,12 +25,10 @@ const Pagination = ({ users, page, loading, handlePages }:Props) => {
               />
               Prev
             </p>
-          </button>
-
-          {loading && <div className='lds-dual-ring-btn'></div>}
+          </button>          
 
           <button
-            className='group hover:bg-[#16dc91] rounded-2xl transition duration-200 w-[114px] h-[44px]'
+            className='group hover:bg-[#16dc91] rounded-2xl transition duration-200 w-[100px] h-[44px]'
             onClick={() => handlePages(page + 1)}
           >
             <p className={`text-md text-[#363636] font-semibold`}>

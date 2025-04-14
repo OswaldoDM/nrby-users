@@ -28,7 +28,7 @@ export const customStyles = (
   option: (provided, state) => ({
     ...provided,
     borderRadius: "15px",
-    backgroundColor: state.isSelected ? "#EADDFF" : "white",
+    backgroundColor: state.isSelected ? "#92f6d0" : "white",
     color: state.isSelected ? "#21005D" : "#49454F",
     fontSize: "14px",
     cursor: "pointer",    

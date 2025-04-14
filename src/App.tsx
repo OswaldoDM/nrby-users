@@ -3,7 +3,6 @@ import { fetchData } from "./api/fetchData";
 import { SortBy } from "./utils/enums";
 import AllFilters from "./components/AllFilters";
 import UserList from "./components/UserList";
-import Pagination from "./components/Pagination";
 import nrby from "./assets/nrby_logo.png";
 
 function App() {
@@ -66,22 +65,22 @@ function App() {
       return [...filtering].sort((a, b) => {
         const extractProperty = compareProperties[sorting];
         return extractProperty(a).localeCompare(extractProperty(b));
-      });
+      })
     }
 
     return filtering;
   }, [users, filters, sorting]);
 
   const onFilterChange = (name:keyof Filters, value:number | string) => {
-    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-  };
+    setFilters( prevFilters => ({ ...prevFilters, [name]: value }));
+  }
 
   const onSortChange = (option?:string) => {
     if (option === "Name") setSorting(SortBy.NAME);
     if (option === "Last Name") setSorting(SortBy.LAST);
     if (option === "Country") setSorting(SortBy.COUNTRY);
     if (!option) setSorting(SortBy.NONE);
-  };
+  }
 
   const handlePages = (op:number) => setPage(op);
 
@@ -90,24 +89,24 @@ function App() {
       <header className='bg-[#363636] flex justify-center'>
         <img src={nrby}></img>
       </header>
-      <div className='container mx-auto mt-8 w-full font-lato font-sm'>
+      <div className='container mx-auto my-8 w-full font-lato font-sm'>
         <AllFilters
-          users={users}
-          loading={loading}
+          users={users}          
           onFilterChange={onFilterChange}
           onSortChange={onSortChange}
+          page={page}
+          handlePages={handlePages}
         />
 
         {error && <p className='text-center mt-5'>Data error</p>}
 
-        <UserList filteredAndSortedUsers={filteredAndSortedUsers} />
-
-        <Pagination
-          users={users}
-          page={page}
-          loading={loading}
-          handlePages={handlePages}
-        />
+        { loading ?
+          <div className='flex justify-center mt-5'>
+            <div className='lds-dual-ring'></div>
+         </div> 
+         : 
+         <UserList filteredAndSortedUsers={filteredAndSortedUsers} />
+        }        
       </div>
     </>
   );

@@ -1,14 +1,16 @@
 import CustomSelect from "./CustomSelect/CustomSelect";
 import countryIcon from "../assets/country_icon.svg";
+import Pagination from "./Pagination";
 
 interface Props {
-  users: User[];
+  users: User[];  
+  page: number;
   onFilterChange: (name: keyof Filters, value: number | string) => void;
   onSortChange: (option?:string) => void;
-  loading: boolean;
+  handlePages: (page:number) => void;
 }
 
-const AllFilters = ({ users, onFilterChange, onSortChange, loading }:Props) => {  
+function AllFilters({ users, onFilterChange, onSortChange, page, handlePages }:Props){  
   
   const uniqueCountries = Array.from(new Set(users.map( user => user.location.country )))
   const countryOptions = uniqueCountries.map( country => ({ value: country, label: country}))  
@@ -31,7 +33,7 @@ const AllFilters = ({ users, onFilterChange, onSortChange, loading }:Props) => {
   ];  
 
   return (
-    <div className='flex flex-col items-center lg:flex-row lg:items-start gap-5'>
+    <div className='flex flex-col items-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-center xl:justify-start gap-5'>
       <div>
         <p className='mb-2 text-center lg:text-start text-[#363636] font-semibold'>
           Users per page:
@@ -89,7 +91,12 @@ const AllFilters = ({ users, onFilterChange, onSortChange, loading }:Props) => {
           placeholder='Seleccione'
         />
       </div>
-      {loading && <div className='lds-dual-ring'></div>}
+      <Pagination
+        users={users}        
+        page={page}
+        handlePages={handlePages}
+      />
+      
     </div>
   );
 };
